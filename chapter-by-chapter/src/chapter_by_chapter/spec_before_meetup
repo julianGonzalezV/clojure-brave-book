@@ -1,0 +1,9 @@
+(ns chapter-by-chapter.spec_before_meetup
+  (:gen-class)
+  (:require [clojure.spec :as s]))
+
+
+
+(require '[clojure.spec :as s])
+(+ 1 4)
+(s/conform even? 1000)
