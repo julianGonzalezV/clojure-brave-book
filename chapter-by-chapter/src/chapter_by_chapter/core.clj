@@ -133,7 +133,7 @@
 ; => 24
 
 ;;Ahora algo de azucar sintactico en funciones anonimas
-(#(* % 3) 8)
+(map #(* % 3) [3 4 5])
 ; => 24
 ;Here’s an example of passing an anonymous function as an argument to map:
 

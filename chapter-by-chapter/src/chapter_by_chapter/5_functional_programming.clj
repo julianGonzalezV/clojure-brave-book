@@ -261,3 +261,8 @@ great-baby-name
 ;::::::::::::::::::::::::::::::::::::::
 ;Entendiendo el juego Peg
 
+; Arquitectura:
+
+; maneja 2 capas 
+; Una para el manejo de las acciones del usuario 
+;Otra para, que produce todo el Side Effect del usuario

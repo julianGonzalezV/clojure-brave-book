@@ -110,7 +110,7 @@
 
 
 ; O tambien pasar varias operaciones a la lista no solo una como las que hemos hecho, antes dijimos como aplicar la operacion a multiples listas, ahora la cuestion es como aplicar multiple operaciones sobre una o varias listas
-
+;reduce en este caso toma lo que se le pase, pejemplo una lista y lo resuleve a un solo valor que sería sumando todos los elementos y returnar la sumatoria
 (def sum #(reduce + %))
 (def avg #(/ (sum %) (count %)))
 (defn stats
