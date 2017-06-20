@@ -156,7 +156,8 @@
 (reduce (fn [new-map [key val]]
           (assoc new-map key (inc val)))
         {}
-        {:max 30 :min 10})
+        {:max 30 :min 10}
+        )
 ; => {:max 31, :min 11}
  
 
@@ -473,7 +474,7 @@ false
 ; => ([:sunlight-reaction "Glitter!"])
 
 (into {} (map identity {:sunlight-reaction "Glitter!"}))
-; lo convierte en la estructura que deseamos
+; lo convierte en la estructura que deseamos, en este caso le estamos diciendo que deseamos un Map con {}
 ; => {:sunlight-reaction "Glitter!"}
 
 (map identity [:garlic :sesame-oil :fried-eggs])
