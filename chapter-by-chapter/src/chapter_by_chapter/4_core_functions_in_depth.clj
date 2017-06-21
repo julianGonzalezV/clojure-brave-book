@@ -626,7 +626,7 @@ false
 (add10 3) 
 ; => 15
 
-;Es como la manera de saber que a la funcion add10 (que ya es un NAMED VALUE en donde el value es una funcion) ya viene con un argumento adicional que es el 10
+;Es como la manera de saber que a la funcion add10 (que ya es un NAMED VALUE en donde el value es una funcion)que  ya viene con un argumento adicional que es el 10
 
 ; podría uno irse mas adelante y decir que una conexion a base de datos ya venga en nuestras funciones o para que es útil??????
 (add10 5 3 6) 

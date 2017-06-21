@@ -115,22 +115,21 @@
   [pos]
   (inc (count (take-while #(> pos %) tri))))
 
-;para entenderlo mejo esta es la parte clave 
+;para entenderlo mejor esta es la parte clave 
 
-(take-while #(> 5  %) tri)
-;(1 3) al hacerle count da 2 y luego inc cuyo resultado es 3
+;(take-while #(> 5  %) tri)
+; al hacerle count da 2 y luego inc cuyo resultado es 3
 ;para el negocio esta propiedad se entiende que es la fila en el PEg-game
 
-(row-num 1) 
+;(row-num 1) 
 ; => 1
-(row-num 5) 
+;(row-num 5) 
 ; => 3
 
-(row-num 11)
+;(row-num 11)
 ;5
 
-(row-num 15)
-;5
+
 
 
 (if (false) "logical true" "logical false")
@@ -268,7 +267,7 @@
 ; por dentro haría algo así
 ;I) connect-right no hace nada y deja el board como llegó 
 ;II) connect-down-left hace 
-(def connect-dl-part1 (assoc-in {1 {:pegged true}} [1 :connection 4] 2)
+(def connect-dl-part1 (assoc-in {1 {:pegged true}} [1 :connection 4] 2))
 
 ; connect-dl es:
 ;{1 {:pegged true, :connection {4 2}}})
@@ -299,11 +298,7 @@
 
 ;Otro ejemplo de composición, igualmente usando reduce
 
-(defn clean
-  [text]
-  (reduce (fn [string string-fn] (string-fn string))
-          text
-          [s/trim #(s/replace % #"lol" "LOL")]))
+
 
 ;Función de creación de un nuevo tablero dado las cantidades de 
 ; filas que se le indique.
@@ -459,33 +454,72 @@
   (some (comp not-empty (partial valid-moves board))
         (map first (filter #(get (second %) :pegged) board))))
 
+;Ojo para entender la funcion anónima, todo inicia con 
+;filter , en donde dicha funcion agarra cada posición del Map board y las convierte en una secuencia de 2 elementos con el patrón ([e1 e2] ...[]), en donde e1 es la posición y e2 es la información detallada de la posicion.
+
+; a lo anterior se le aplica second y el second de [e1 e2 ] es e2, ejemplo:
+(def second-t1(second [ 1  {:pegged true, :connections {6 3, 4 2}}]))
+;{:pegged true, :connections {6 3, 4 2}}
+
+;luego con get obtiene el valor de pegged 
+(get second-t1 :pegged)
+;true
 
 (second [ 3 4 5])
 ;4
 
-(second {:name "julian" :name2 "andres"})
-;[:name2 "andres"]
+;ejemplo de todo junto, lo que podemos notar es qye elimina los que tengan false en :pegged
+(filter #(get (second %) :pegged) {1 {:connections {3 6, 8 9}, :pegged true}, 2 {:connections {3 5, 10 9}, :pegged false}})
+;([1 {:connections {3 6, 8 9}, :pegged true}])
 
-(get (second {:name "julian" :name2 "andres"}) :name2)
+
+
 
 ;my-board está definido arriba
 (can-move? my-board)
 ;{4 2}
 
-([1 {:connections {6 3, 4 2}, :pegged true}]
+(def seq-of-pos1 [1 {:connections {6 3, 4 2}, :pegged true}]
  [2 {:connections {9 5, 7 4}, :pegged true}])
+
 
 ;:::::::::::::::::::::::::::::::::::::::
 ;Rendering and Printing the Board
 ;::::::::::::::::::::::::::::::::::::::
-
+;letra 'a'(en caracter no string) del abcdario, sí se coloca ejemplo 94 saldrán otros caracteres
 (def alpha-start 97)
+;letra 'z'(en caracter no string) del abcdario
 (def alpha-end 123)
+;map aplica una funcion a un Seq de registros, en este caso al aplicar char obtiene el caracter y al aplicar string lo castea a Str 
 (def letters (map (comp str char) (range alpha-start alpha-end)))
+; El resultado es:
+
+;("a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z")
+
+;esta se usa en la funcion row-padding para indicar cuantos especios mover
 (def pos-chars 3)
 
+(def ansi-styles{:red "[31m":green "[32m":blue "[34m":reset "[0m"})
 
-;
+(defn ansi
+"Produce a string which will apply an ansi style"
+  [style]
+   (str \u001b (style ansi-styles)))
+;ejemplo de llamado
+(ansi :red)
+
+
+(defn colorize
+ "Apply ansi color to text"
+ [text color]
+  (str (ansi color) text (ansi :reset)))
+
+
+;Las funciones render-pos, row-positions, row-padding y render-row 
+;crean String para representar el tablero
+; I) obtiene con nth la letra que representa la posición 
+; II)Obtiene un 0 o un - de acuerdo a si el key :pegged es true 
+; Concatena I y II quedando por ejemplo a0 dado que pegged en la posicion de entrada (pos) de la funcion tenga true en pegged
 (defn render-pos
   [board pos]
   (str (nth letters (dec pos))
@@ -493,11 +527,37 @@
          (colorize "0" :blue)
          (colorize "-" :red))))
 
+;Dec lo que hace es quitarle uno al número que se le pasa, es lo contrario de inc
+(dec 15)
+
+(render-pos my-board 3)
+
+;Retorna un Seq con todas las posiciones de una fila 
 (defn row-positions
   "Return all positions in the given row"
   [row-num]
   (range (inc (or (row-tri (dec row-num)) 0))
          (inc (row-tri row-num))))
+
+;Ejemplo de uso para row-num = 5 , al decrementar es 4 en en range
+;por lo cual 
+(row-tri 4)
+;10, que sería la última posición de la fila 4 y se incrementa en uno para arrancar desde el inicio de la fila 5 y se va hasta el último elemento de dicha fila lo que genera:
+(row-positions 5)
+;(11 12 13 14 15)
+
+;recordar que or retorna el primer truly encontrado, ejemplo:
+(or nil 16 7)
+;16
+
+;recorda que tri es un Seq (1 3 5 7 9 ...inf)
+;y row-tri obtiene la fila N del pegthing   y retorna el último de esa fila
+; ejemplo de la fila 6 tiene el 21 como última posición (dado el caso que el peg-thing sea de tmaño 6 )
+(row-tri 6)
+;21
+
+(range 0 6)
+;(0 1 2 3 4 5)
 
 (defn row-padding
   "String of spaces to add to the beginning of a row to center it"
@@ -505,16 +565,27 @@
   (let [pad-length (/ (* (- rows row-num) pos-chars) 2)]
     (apply str (take pad-length (repeat " ")))))
 
+(row-padding 0 0)
+;""
+(row-padding 8 6)
+;"        "
+
+; un take negativo devuelve vacío
+(apply str (take 3 (repeat " ")))
+
 (defn render-row
   [board row-num]
   (str (row-padding row-num (:rows board))
        (clojure.string/join " " (map (partial render-pos board) 
                                      (row-positions row-num)))))
 
+;Con el print se ven los colores :) :) 
+(println (render-row my-board 5))
 
 ;
 
-
+; hace un range de 1 -> 6 y lo guarda eb row-num 
+; Luego hace un side-effect operation que es el println (recordar que puede ser un ingreso a BD , escribir en un archivo etc)
 (defn print-board
   [board]
   (doseq [row-num (range 1 (inc (:rows board)))]
@@ -522,17 +593,28 @@
 
 ;
 
+(print-board my-board)
+(:rows my-board)
+;5
 
 
-;:::::::::::::::::::::::::::::
+;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;Player Interaction
-;::::::::::::::::::::::::::::
+;::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+;I) Función que recibe una letra y obtiene su número int que la representa
+;II) Luego le resta el  alpha-start que es 97 
+;III) Al resultado del paso II le aumenta 1 y esa es la posicion en el tablero :) 
 (defn letter->pos
   "Converts a letter string to the corresponding position number"
   [letter]
   (inc (- (int (first letter)) alpha-start)))
 
+(int (first "b"))
+;98
 
+
+;
 (defn get-input
   "Waits for user to enter text and hit enter, then cleans the input"
   ([] (get-input nil))
@@ -542,28 +624,31 @@
          default
          (clojure.string/lower-case input)))))
 
+; Al ejecutarlo entonces se activa la consola en espera de que se ingrese un valor, si es mayuscula le jace lower-case 
+; si es un número retorna el miso número
+; Sí no se le envía nada sino que se da enter de una retorna nil que es el valor por defecto cuando se llama sin parámetros
+(get-input)
 
-(characters-as-strings "a   b")
+(str (seq "aaa"))
+
+
+;con el pattern dado descarta todo lo que no sea alfabeto 
+;si se le 
+(defn characters-as-strings
+  "Given a string, return a collection consisting of each individual
+  character"
+  [string]
+   (re-seq #"[a-zA-Z]" string))
+
+(characters-as-strings "a   b C D 4 5 ")
 ; => ("a" "b")
 
-(characters-as-strings "a   cb")
+(characters-as-strings "a   cb45u")
 ; => ("a" "c" "b")
 
 
 ;
 
-(defn prompt-move
-  [board]
-  (println "\nHere's your board:")
-  (print-board board)
-  (println "Move from where to where? Enter two letters:")
-  (let [input (map letter->pos (characters-as-strings (get-input)))]
-    (if-let [new-board (make-move➊ board (first input) (second input))]
-      (user-entered-valid-move new-board)
-      (user-entered-invalid-move board))))
-
-
-;
 
 (defn user-entered-invalid-move
   "Handles the next step after a user has entered an invalid move"
@@ -580,6 +665,33 @@
     (prompt-move board)
     (game-over board)))
 
+(defn prompt-move
+  [board]
+  (println "\nHere's your board:")
+  (print-board board)
+  (println "Move from where to where? Enter two letters:")
+  (let [input (map letter->pos (characters-as-strings (get-input)))]
+    (if-let [new-board (make-move board (first input) (second input))]
+      (user-entered-valid-move new-board)
+      (user-entered-invalid-move board))))
+
+
+(prompt-move my-board)
+
+
+(defn prompt-empty-peg
+  [board]
+  (println "Here's your board:")
+  (print-board board)
+  (println "Remove which peg? [e]")
+  (prompt-move (remove-peg board (letter->pos (get-input "e")))))
+
+(defn prompt-rows
+  []
+  (println "How many rows? [5]")
+  (let [rows (Integer. (get-input 5))
+        board (new-board rows)]
+    (prompt-empty-peg board)))
 
 (defn game-over
   "Announce the game is over and prompt to play again"
@@ -596,16 +708,4 @@
           (System/exit 0))))))
 
 
-(defn prompt-empty-peg
-  [board]
-  (println "Here's your board:")
-  (print-board board)
-  (println "Remove which peg? [e]")
-  (prompt-move (remove-peg board (letter->pos (get-input "e")))))
 
-(defn prompt-rows
-  []
-  (println "How many rows? [5]")
-  (let [rows (Integer. (get-input 5))
-        board (new-board rows)]
-    (prompt-empty-peg board)))
