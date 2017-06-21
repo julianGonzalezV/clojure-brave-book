@@ -356,13 +356,13 @@
 ;{1 {:pegged false, :connections {4 2, 6 3}}, 4 {:pegged false, :connections {1 2}}, 6 {:connections {1 3}}}
 
 
-;igual que remove, pero esta vez para colocar true , indicando que la posición is pegged
+;igual que remove, pero esta vez para colocar true , indicando que la posición is pegged, y retorna el Map/board actualizado
 (defn place-peg
   "Put a peg in the board at given position"
   [board pos]
   (assoc-in board [pos :pegged] true))
 
-; Move no es más que colocar el pegged de la posición from en false y el de pa posición To en true
+; Move no es más que colocar el pegged de la posición from en false y el de pa posición To en true y retorna el Map/board actualizado
 (defn move-peg
   "Take peg out of p1 and place it in p2"
   [board p1 p2]
@@ -436,7 +436,7 @@
 ;se desee validar antes.
 
 ;make-move lo que hace es validar con el if-let 
-;Sí el movimiento es valido, sí no lo es retorna nil
+;Sí el movimiento es valido, sí no lo es entonces retorna nil
 ; y si lo es entonces guarda en en jumped la posición a saltar, dicha posición le aplica remove-peg, que no es más que coloca el false el Key :pegged, lo anterior retorna el Map actualizado. Finalmente con el map actualizado, realiza move-peg que coloca :pegged true del p2 y en false el de p1
 (defn make-move
   "Move peg from p1 to p2, removing jumped peg"
@@ -585,7 +585,7 @@
 ;
 
 ; hace un range de 1 -> 6 y lo guarda eb row-num 
-; Luego hace un side-effect operation que es el println (recordar que puede ser un ingreso a BD , escribir en un archivo etc)
+; Luego hace un doseq que se usa para cuando se realizan side-effect operations, que en este caso  es el println (recordar que puede ser un ingreso a BD , escribir en un archivo etc)
 (defn print-board
   [board]
   (doseq [row-num (range 1 (inc (:rows board)))]
@@ -632,14 +632,15 @@
 (str (seq "aaa"))
 
 
-;con el pattern dado descarta todo lo que no sea alfabeto 
-;si se le 
+;con el pattern dado ([a-zA-Z]) descarta todo lo que no sea numerico o no sea alfabeto  ; retorna una secuenia de las letras que se le pasen
 (defn characters-as-strings
   "Given a string, return a collection consisting of each individual
   character"
   [string]
    (re-seq #"[a-zA-Z]" string))
 
+
+; ejemplo de uso
 (characters-as-strings "a   b C D 4 5 ")
 ; => ("a" "b")
 
@@ -649,7 +650,9 @@
 
 ;
 
-
+;cuando se llama a user-entered-invalid-move
+;simplemente se muestra el mensaje al usuario y se le pasa el mismo board a 
+; la función prompt-move(acá también es el mismo board que le ingresaron, es la forma de decir que dado un movimienoto erróneo el board NO CAMBIA)
 (defn user-entered-invalid-move
   "Handles the next step after a user has entered an invalid move"
   [board]
@@ -657,7 +660,8 @@
   (prompt-move board))
 
 
-;
+;Cuando se llama esta función es poque se puede realizar el movimeinto por eso se llama a prompt-move de nuevo pero esta vez con un new-board, es la FORMA DE REPRESENTAR QUE EL BOARD CAMBIÓ DADO UN movimiento válido
+; eso si, siempre y cuando existan más movimientos
 (defn user-entered-valid-move
   "Handles the next step after a user has entered a valid move"
   [board]
@@ -665,6 +669,13 @@
     (prompt-move board)
     (game-over board)))
 
+
+;Con el first y second de input asegura que así se le pase 3 letras solo tomará las
+;primeras 2, DEMOSTRAR QUE ES CIERTO+
+;en new-board se guarda nil sí no hay forma de realizar el movimiento o el Map/board actualizado que lo retorna make-move
+
+; si es nil se considera invalido el movimiento y se llama a  la función user-entered-invalid-move
+; 
 (defn prompt-move
   [board]
   (println "\nHere's your board:")
@@ -679,6 +690,9 @@
 (prompt-move my-board)
 
 
+; las dos siguientes funciones prompt-empty-peg y  prompt-rows
+; se ejecutan solamente cuando se ejecuta game-over y sugiere (prompt) 
+; que se le ingrese una nueva configuración del tablero Peg tanto en cantidad de filas COMO en la selección de la posición que va a quedar pegged en False
 (defn prompt-empty-peg
   [board]
   (println "Here's your board:")
@@ -707,5 +721,13 @@
           (println "Bye!")
           (System/exit 0))))))
 
+;Que hace vals? .
+;R/ Retorna una secuencia de los valores que los keys de una map
+(vals {:a "foo", :b "bar"})
+;("foo" "bar")
+
+(vals {1 {:connections {3 6, 8 9}, :pegged true}, 2 {:connections {3 5, 10 9}, :pegged false}})
+;({:connections {3 6, 8 9}, :pegged true} {:connections {3 5, 10 9}, :pegged true})
 
 
+(filter :pegged ({:connections {3 6, 8 9}, :pegged true} {:connections {3 5, 10 9}, :pegged true}) )
