@@ -255,6 +255,10 @@ great-baby-name
 ;para operaciones complejas o que siempre se van a estar realizando esto es una ventaja!!.
 
 
+
+
+
+
 ; JUEGO :)
 ;::::::::::::::::::::::::::::::::::::::
 ;Peg Thing
