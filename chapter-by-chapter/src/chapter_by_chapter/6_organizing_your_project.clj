@@ -6,7 +6,7 @@
 ; Namespaces mapea un identificador a un set de objetos que contiene , es de tipo clojure.lang.Namespace
 ;y podemos referirnos a estos de la misma forma como lo hacemos con otros objetos (funciones, estructuras* etc)
 ;eg
-;con *ns* por ejemplo nos referimos a namespace actual que es user por defecto
+;con *ns* por ejemplo nos referimos a namespace actual que es user por defecto, o en el que estamos parados
 (ns-name *ns*)
 ;user
 
@@ -117,14 +117,17 @@ cheddars
 ;Sí ejecuto la siguiente línea se genera error
 ;great-books
 
-; pero si le especifico el namespace al que pertenece ahí si funciona 
+; pero si le especifico el namespace al que pertenece + el symbol a cargar ahí si funciona 
 ;esta sería la forma de usar funciones de otros ns u archivos
+;
 chapter-by-chapter.core/great-books
 ;["The Power of Bees" "Journey to Upstairs"]
 
-
+;:::::::::::::::::::::::
 ;::::::::::::refer:::::::::
+;:::::::::::::::::::::::
 
+; Note como deste el namespace cheese.analysi se hace ref a cheese.taxonomy
 
 user=> (in-ns 'cheese.taxonomy)
 cheese.taxonomy=> (def cheddars ["mild" "medium" "strong" "sharp" "extra sharp"])
@@ -135,9 +138,53 @@ cheese.analysis=> bries
 ; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
 
 cheese.analysis=> cheddars
+;o estando en cheese.analisis simplemente llamamos el objeto del otro namespace 
+cheddars
 ; => ["mild" "medium" "strong" "sharp" "extra sharp"]
 
 
+;TAMBIEN  SE puede usar refer con filter como :only, :exclude, and :rename
+cheese.taxonomy=> (def bries2 ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"])
+cheese.taxonomy=> (def bries3 ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"])
+cheese.analysis=> (clojure.core/refer 'cheese.taxonomy :exclude  ['bries2])
+cheese.analysis=> bries2
+; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
+cheese.analysis=> cheddars 
+; => RuntimeException: Unable to resolve symbol: cheddars
+
+;ejemplo de rename 
+cheese.analysis=> (clojure.core/refer 'cheese.taxonomy :rename {'bries 'yummy-bries})
+cheese.analysis=> bries
+; => RuntimeException: Unable to resolve symbol: bries
+cheese.analysis=> yummy-bries
+; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
 
 
+; Si se desean funciones que solo se puedan usar en un namespace en especial, entonces creamos
+;funciones privadas con def-
+
+;ejemplo;
+;chapter-by-chapter.core/great-books
+(in-ns 'cheese.analysis)
+;; Notice the dash after "defn"
+(defn- private-function
+  "Just an example function that does nothing"
+  [])
+
+
+;::::::::::::::::ALIAS::::::::::::
+
+cheese.analysis=> (clojure.core/alias 'taxonomy 'cheese.taxonomy)
+cheese.analysis=> taxonomy/bries
+; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
 ;::::::::::::::::::::::::::::::::::::::::::::
+
+
+;:::::::::::::::::Real Project Organization:::::::::::::::::::::::::
+
+;::require and use Ver ejemplo de uso en proyecto /home/ubuntu/Documents/study/clojure/clojure-for-the-brave-and-true/clojure-brave-book/the-divine-cheese-code/src/the_divine_cheese_code/visualization
+
+
+;The ns Macro:::::::::::::::::::::::
+
+
