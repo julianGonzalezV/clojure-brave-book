@@ -1,20 +1,23 @@
 ;ns se conoce como un MACRO que incorpora varias funcionalidades/librerías al namespacr 
 (ns the-divine-cheese-code.core
-  (:gen-class)
+  (:require [clojure.java.browse :as browse]
+            [the-divine-cheese-code.visualization.svg :refer [xml]])
+  (:gen-class))
+
 ;si colocamos esta línea entonces al hacer lesin run desde la carpeta raiz del proyecto va a decir que no reconoce println o habría que colocar en todas parte donde se use el clojure.core/println
 ;(:refer-clojure :exclude [println])
-)
+
 
 ;por lo cual es uso de ns es mas adecuado, lo anterior es como escribir :
 ;(in-ns 'the-divine-cheese-code.core)
 ;(refer 'clojure.core :exclude ['println]) se ahorra cierto :) 
 
 ;; Ensure that the SVG code is evaluated
-(require 'the-divine-cheese-code.visualization.svg)
+;(require 'the-divine-cheese-code.visualization.svg)
 ;; Refer the namespace so that you don't have to use the 
 ;; fully qualified name to reference svg functions
 ;el namespace está en ../src/the_divine_cheese_code/visualization
-(refer 'the-divine-cheese-code.visualization.svg)
+;(refer 'the-divine-cheese-code.visualization.svg)
 
 (def heists [{:location "Cologne, Germany"
               :cheese-name "Archbishop Hildebold's Cheese Pretzel"
