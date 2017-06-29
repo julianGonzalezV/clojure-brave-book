@@ -8,7 +8,10 @@
 ;eg
 ;con *ns* por ejemplo nos referimos a namespace actual que es user por defecto, o en el que estamos parados
 (ns-name *ns*)
-;user
+;user++
+
+
+
 
 ;en clojure siempre estamos en un namespace
 
@@ -141,7 +144,8 @@ cheese.analysis=> cheddars
 ;o estando en cheese.analisis simplemente llamamos el objeto del otro namespace 
 cheddars
 ; => ["mild" "medium" "strong" "sharp" "extra sharp"]
-
+; no va a funcionar porque no lo he incluido en el namespace
+(+ 1 2)
 
 ;TAMBIEN  SE puede usar refer con filter como :only, :exclude, and :rename
 cheese.taxonomy=> (def bries2 ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"])
@@ -165,7 +169,9 @@ cheese.analysis=> yummy-bries
 
 ;ejemplo;
 ;chapter-by-chapter.core/great-books
-(in-ns 'cheese.analysis)
+(in-ns 'cheese.analysis
+)
+(refer 'clojure.core :exclude ['println])
 ;; Notice the dash after "defn"
 (defn- private-function
   "Just an example function that does nothing"
@@ -173,6 +179,7 @@ cheese.analysis=> yummy-bries
 
 
 ;::::::::::::::::ALIAS::::::::::::
+
 
 cheese.analysis=> (clojure.core/alias 'taxonomy 'cheese.taxonomy)
 cheese.analysis=> taxonomy/bries
@@ -187,4 +194,42 @@ cheese.analysis=> taxonomy/bries
 
 ;The ns Macro:::::::::::::::::::::::
 
+;Una llamada a ns incluye a require, use, in-ns, alias, and refer, incluso ya viene con el clojure.core, que permire usar el print, + - * etc 
+
+
+;There are six possible kinds of references within ns:
+
+   ; (:refer-clojure)
+    ;(:require)
+   ; (:use)
+   ; (:import)
+   ; (:load)
+    ;(:gen-class)
+
+ ; 1) Require*********
+; hay dos formas de usar require I) como referencia ':require' o como funcion (require xx)
+
+; usuando referencia(los dos puntos), por ejemplo podemos usar refer sobre los nombre de los simbolso
+;(ns the-divine-cheese-code.core
+;(:require [the-divine-cheese-code.visualization.svg :refer [points]]))
+
+; Con require como funcion necesitariamos mas cod (ver libro)
+
+
+; 2) Use 
+; El libro recomienda NO USARLO 
+
+(ns the-divine-cheese-code.core
+  (:use [clojure.java browse io]))
+
+; ES equivalente a esto
+
+(in-ns 'the-divine-cheese-code.core)
+(use 'clojure.java.browse)
+(use 'clojure.java.io)
+; Note como con use como ref usando : no requiere un use por cada library a usar 
+
+; HASTA ACA EL USO DE NS
+
+;volver al proyecto  the-divine-cheese para continuar el capitulo 6
 

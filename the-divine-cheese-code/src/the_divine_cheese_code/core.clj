@@ -37,7 +37,28 @@
               :lat 41.90
               :lng 12.45}])
 
+
+(defn url
+  [filename]
+  (str "file:///"
+       (System/getProperty "user.dir")
+       "/"
+       filename))
+
+(defn template
+  [contents]
+  (str "<style>polyline { fill:none; stroke:#5881d8; stroke-width:3}</style>"
+       contents))
+
+
 ;Note como se llama a point sin necesidad de indicarle el namespace completo + /function sino que se llamara como si fuera del namespace actual (como analogía a los imports de java)
+; este es el entry point del aplicativo, vaya a la raiz y ejecute lein run y el programa estra aca
+
 (defn -main
   [& args]
-  (println (points heists)))
+  (let [filename "map.html"]
+    (->> heists
+         (xml 50 100)
+         template
+         (spit filename))
+    (browse/browse-url (url filename))))
