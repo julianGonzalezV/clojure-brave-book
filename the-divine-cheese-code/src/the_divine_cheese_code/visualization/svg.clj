@@ -26,6 +26,14 @@
 (points [{:lat 80 :lng 70}  {:lat 60 :lng 50}])
 
 
+;here se reescribe la function note como se usa el alias de require (see above)
+(defn points
+  "Given a seq of lat/lng maps, return string of points joined by space"
+  [locations]
+  (s/join " " (map latlng->point locations)))
+(points [{:lat 80 :lng 70}  {:lat 60 :lng 50}])
+;"80,70 60,50"
+
 ;Entendiendo la funcion comparator-over-maps:
 ;1) recibe dos argumentos I una funcion que compara y II) un la lista de keys , para el ejemplo [:lat :lng]
 ;2) finalmente la funcion RETORNA OTRRA FUNCION fn que recibe un maps/listado (SE LE PASA EN EL MOMENTO DE DECIR (min locations)) de Maps de locations ejemplo el heists de  the-divine-cheese-code.core
@@ -54,8 +62,6 @@
 
 ;desglosando la funcion 
 (map clojure.core/min [{:a 1 :b 3} {:a 5 :b 0}])
-(min [{:lat 1 :lng 3} {:lat 5 :lng 0}])
-;{:lat 1, :lng 0}
 
 ;Otro desgloce
 (map (fn [k] (apply clojure.core/min  (map k [{:lat 1 :lng 3} {:lat 5 :lng 0}] ))) [:lat :lng])
@@ -69,6 +75,9 @@
 (def min (comparator-over-maps clojure.core/min [:lat :lng]))
 (def max (comparator-over-maps clojure.core/max [:lat :lng]))
 
+
+(min [{:lat 1 :lng 3} {:lat 5 :lng 0}])
+;{:lat 1, :lng 0}
 
 
 (clojure.core/min 1 2 3)
@@ -97,35 +106,53 @@
 (/ 20 5)
 :4
 
-;merge-wit es una funcion propia del core de clojure que recibe una funcion en este caso el + o el - 
-; y lo opera con los Key-values de una secuencya de maps y retorna un solo Map
+;merge-wit es una funcion propia del core de clojure que recibe una funcion, en este caso el + o el - 
+; y lo opera a entre Key-values de una secuencia de maps y retorna un solo Map
 (merge-with - {:lat 50 :lng 10} {:lat 5 :lng 5})
 ; => {:lat 45 :lng 5}
 
-(merge-with + {:lat 50 :lng 10} {:lat 5 :lng 5})
-;{:lat 55, :lng 15}
+(merge-with + {:lat 50 :lng 10} {:lat 5 :lng 5} {:lat 15 :lng 25})
+;{:lat 70, :lng 40}
 
 
 
-(defn points
-  "Given a seq of lat/lng maps, return string of points joined by space"
-  [locations]
-  (s/join " " (map latlng->point locations)))
+(points [10 20 30])
 
 (latlng->point {:lat 60 :lng 50})
 ;"80,70"
 
-
+;concatena los puntos al string que tiene 
 (defn line
   [points]
   (str "<polyline points=\"" points "\" />"))
 
+(line "80,70 60,50")
+;"<polyline points=\"80,70 60,50\" />"
+
+
+;con los 3 argumentos de entrdada entonces:
+;con ->> es util para secuncias de pasos u operaciones , es decir que en este ejemplo
+;primero le aplica  translate-to-00 y su resultado lo pasa a scale (si verifica la funcion scale al recibe los locatoins en su ultimo argumento a la derecha)
 (defn transform
   "Just chains other functions"
   [width height locations]
   (->> locations
        translate-to-00
        (scale width height)))
+
+;desglozando funcion arriba
+ (->>  [{:lat 80 :lng 70}  {:lat 60 :lng 50}]
+       translate-to-00
+       )
+;({:lat 20, :lng 20} {:lat 0, :lng 0})
+(scale 5 2 [{:lat 20, :lng 20} {:lat 0, :lng 0}])
+;({:lat 2N, :lng 5N} {:lat 0N, :lng 0N})
+
+
+ (->>  [{:lat 80 :lng 70}  {:lat 60 :lng 50}]
+       translate-to-00
+       (scale 5 2))
+;({:lat 2N, :lng 5N} {:lat 0N, :lng 0N})
 
 (defn xml
   "svg 'template', which also flips the coordinate system"
@@ -141,3 +168,6 @@
            line)
        "</g></g>"
        "</svg>"))
+;ejemplo de uso 
+(xml 5 2 [{:lat 20, :lng 20} {:lat 0, :lng 0}])
+;"<svg height=\"2\" width=\"5\"><g transform=\"translate(0,2)\"><g transform=\"rotate(-90)\"><polyline points=\"2,5 0,0\" /></g></g></svg>"

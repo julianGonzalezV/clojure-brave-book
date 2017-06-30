@@ -65,3 +65,10 @@
          template
          (spit filename))
     (browse/browse-url (url filename))))
+;Contrario a slurp , spit escribe un archivo con la informacion que se le pase 
+
+; url lo que hace es escribir la ruta completa hasta la raiz del proyecto 
+(url "hla")
+;"file:////home/julian/Documents/study/clojure/clojure-brave-book/the-divine-cheese-code/hla"
+
+; finalmemte con browse/browse-url se despliega o se lanza al navegador el contenido
