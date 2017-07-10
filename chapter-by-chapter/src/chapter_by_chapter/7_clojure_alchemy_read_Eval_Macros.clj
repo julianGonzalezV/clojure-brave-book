@@ -249,6 +249,11 @@ x; sin preguntamos por el valor de x sigue siendo 15!!
 
 ; Macros se ejecutan entre el reader y Eval process, eso lo hace llamativo ya que no hay que evaluar para manipular
 
+; lo que importa aca es que el macro  ignore-last-operand recibe (+ 1 2 10) completo y sin evaluar , eso es lo potente de los macros o tambien se pueide decir que los Symbols no se resuelven 
+
+; A diferencia de funciones en clojure que si evaluan lo que se les pase en esete caso el 13 y ya es imposible cambiar algo assi como en el ejemplo anterior
+
+; Otra diferencia es que el DS retornado por una funcion se no EVALUA mientras que el retornado por un MACRO si. 
 (defmacro ignore-last-operand
   [function-call]
   (butlast function-call))
@@ -262,3 +267,39 @@ x; sin preguntamos por el valor de x sigue siendo 15!!
 ;; This will not print anything
 (ignore-last-operand (+ 1 2 (println "look at me!!!")))
 ; => 3
+
+
+;El proceso de determinar el valor retornado por un macro se conoce como macro-expansion y podemos interceptar lo que va a retornar un macro antes de que sea evaluado, eje:
+
+; con la funcion macroexpand entonces sabremos que data structure el macro retornar[a antes de que sea evaluado, note el quote symbol
+(macroexpand '(ignore-last-operand (+ 1 2 10)))
+; => (+ 1 2)
+
+(macroexpand '(ignore-last-operand (+ 1 2 (println "look at me!!!"))))
+; => (+ 1 2)
+
+;::::::::::::Syntactic Abstraction and the -> Macro::::::::::::::::::::::::::::::
+
+(defn read-resource
+  "Read a resource into a string"
+  [path]
+  (read-string (slurp (clojure.java.io/resource path))))
+
+
+
+
+
+; Se puede reemplazar por 
+(defn read-resource2
+  [path]
+  (-> path
+      clojure.java.io/resource
+      slurp
+      read-string))
+
+; se lee de arriba hacia abajo por lo cual inicia pasando el path a la funcion clojure.java.io/resource >> luego el resultado se le entrea a Slurp que lo convierte a un string y >> finalmentes se lo pasa a la funcion read-string 
+
+
+
+
+;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
