@@ -1,0 +1,48 @@
+
+
+1)Installing lein
+
+El archivo se tiene que llamar lein nada de .sh porque entonces as[i quedar[a el comando 
+
+luego 
+$ sudo mv lein /usr/local/bin
+
+>chmod a+x ~/bin/lein  para que quede ejecutable
+
+
+
+
+
+
+
+2) Installing emacs
+
+
+install java: https://howtoprogram.xyz/2016/09/29/install-oracle-java-9-on-ubuntu-16-04/
+
+
+
+sudo add-apt-repository ppa:kelleyk/emacs
+sudo add-apt-repository ppa:cassou/emacs
+
+
+down vote
+accepted
+Use the --remove flag, similar to how the PPA was added:
+
+sudo add-apt-repository --remove ppa:cassou/emacs
+
+
+3) Configurando temas (color negro) y dem[as actualizaciones para manejo de clojure
+	Run mv path/to/emacs-for-clojure-book1 ~/.emacs.d    ----------> OJO el nombre de la carpeta es ".emacs.d"
+	compurebe que los archivos quedaron alli 
+
+	Create the file ~/.lein/profiles.clj (Windows users, this is probably C:\Users\your_user_name\.lein\profiles.clj) and add this line to it:
+	{:user {:plugins [[cider/cider-nrepl "0.8.1"]]}} 
+
+
+	Open Emacs.
+
+
+
+
