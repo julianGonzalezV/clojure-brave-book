@@ -1,0 +1,98 @@
+
+http://www.braveclojure.com/core-functions-in-depth/
+
+Core Functions in Depth::::::::::::
+
+Programming to Abstractions:
+
+La función  map en Clojure  aplica para:
+> lists, 
+>vectors, 
+>sets, 
+>hash map 
+(Ver código clojure )
+
+Miesntas que es posible que en otros lenguajes (Elisp por ejemplo) Existe:
+>función map para listas, 
+>función maphash  para estructura de datos hash map 
+Lo anterior se llama definir funciones en terminos de estructura 
+y lo 
+IDEAL ES EN TERMINOS DE ABSTRACCIÓN(cómo lo define clojure).
+
+
+
+
+;Treating Lists, Vectors, Sets, and Maps as Sequences
+ 
+Map es una función f, tal que  y1 = ƒ(x1), y2 = ƒ(x2), . . . yn = ƒ(xn).  (VER EL DIBUJO DE LA PÁGINA).
+
+
+sequence or seq::: para indicar que la estructura de datos en question se tratarán como una secuencia y que lo que contiene no importa en este contexto.
+
+>Sí LAS FUNCIONES DE secuencia centrales first, rest, and cons trabajan sobre una estructura de datos, entonces pordemos decir que dicha estructura 
+implemente La Abstraciones de Sequence,  Lists, vectors, sets, and maps all implement the sequence abstraction
+
+Quedo en You can perform three core functions on a linked list....
+
+
+
+
+
+:::::::::::::::::::...Abstraction Through Indirection::::::::::::::::::::::::::::::::
+
+Duda: Cómo la función First puede trabajar en diferentes estructuras de datos??
+
+esta 
+var first = function(node) {
+  return node.value;
+};
+
+o esta:
+
+var first = function (array) {
+  return array[0];
+}
+
+Clojure hace esto usando DOS formas de Indirection:
+
+EN PROGRAMACIÓN Indirection es el mecanismo en que un lenguaje  usa un mismo nombre para multipleas sgnificados 
+en el caso de First, éte tiene diferentes significados a nivel de estructura de datos. Indirection es lo que finalmente hace posible las Abstraciones
+
+Polymorphism is one way that Clojure provides indirection
+
+
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+Seq Function Examples::
+
+La librería Seq de Clojure tiene varias funciones útiles que muy seguro usaremos en nuestra vida diaria.
+
+
+map: Sobre una lista o varias a la vez
+
+
+
+::::::::::::::::::reduce Function::::::::::::::::::::::::::
+>Reduce procesa cada elemento de un Seq para generar un resultado
+>But there are other useful usages : (see the project code on github juligove)
+
+	1) Transform a Map's values
+	
+	2) Obtener valores de un Map
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+::::::::::::::::::::::::::....take, drop, take-while, and drop-while::::::::::::::::::
+Ver ejemplo en el código:
+
+
+
+
+
+filter and some:::
+En el ejemplo de take-while lo que hacíamos era elimianar y take para obtener los registros de febrero
+por lo cual filter hace esto de una vez :) 
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

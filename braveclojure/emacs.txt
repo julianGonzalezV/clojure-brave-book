@@ -1,0 +1,75 @@
+M es ALt
+
+ 
+ C-x b : Para crear un nuevo buffer, pide el nombre; se diligencia; enter 
+ C-x k : Para salir del buffer actual (ejemplo salir del anterior creado)
+ 
+  C-x C-f : Abrir un nuevo archivo
+  
+  C-x C-s: Guardar los cambios realizados sobre un archivo
+  
+  C-x C-f: Crear un nuevo archivo , solamente es ir hasta la ruta donde se desea y colocar el nombre del archivo deseado.
+  
+  
+  
+ --****************************
+ Cuando se está editando un archivo o escribiento líenas de código 
+ c-k : Elimina el texto 
+ C-/ (ctrl+shit+7): Es el mismo cotrl z para hacer UNDO
+ Keys	Description
+C-a	Move to beginning of line.
+M-m	Move to first non-whitespace character on the line.
+C-e	Move to end of line.
+C-f	Move forward one character.
+C-b	Move backward one character.
+M-f	Move forward one word (I use this a lot).
+M-b	Move backward one word (I use this a lot, too).
+C-s	Regex search for text in current buffer and move to it. Press C-s again to move to next match.
+C-r	Same as C-s, but search in reverse.
+M-<	Move to beginning of buffer.
+M->	Move to end of buffer.
+M-g g	Go to line.
+
+
+Go to the beginning of the file.
+Use C-spc.
+Use M-f twice. You should see a highlighted region encompassing If you.
+Press backspace. That should delete If you.
+
+
+--*********************
+Create a region over the word Treasure in the first line.
+Use M-w, which is bound to the kill-ring-save command. In general, M-w is like copying. It adds the region to the kill ring without deleting it from your buffer.
+Move point to the word choreography on the last line.
+Use M-d, which is bound to the kill-word command. This adds choreography to the kill ring and deletes it from your buffer.
+Use C-y. This will yank the text you just killed, choreography, inserting it at point.
+Use M-y. This will remove choreography and yank the next item on the kill ring, Treasure.
+
+
+Keys	Description
+C-w	Kill region.
+M-w	Copy region to kill ring.
+C-y	Yank.
+M-y	Cycle through kill ring after yanking.
+M-d	Kill word.
+C-k	Kill line.
+
+
+--***********************
+Tab	Indent line.
+C-j	New line and indent, equivalent to enter followed by tab.
+M-/	Hippie expand; cycles through possible expansions of the text before point.
+M-\	Delete all spaces and tabs around point. (I use this one a lot.)
+
+--*******************************
+
+Keys	Description
+C-h k key-binding	Describe the function bound to the key binding. To get this to work, you actually perform the key sequence after typing C-h k.
+C-h f	Describe function.
+
+--********************************
+
+
+
+PARA CONECTAR EL EMACS CON EL REPL solo es 
+M-x y escribirmos cider y enter 

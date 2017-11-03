@@ -1,0 +1,243 @@
+
+Spec: De especulación? o especificacion
+
+--*********************Sección de preguntas:
+
+COMO SE METE EN EL PROYECTO PARA PODER USARLO ..DEPRONTO EN EL project.clj???
+R/ En la cabecera del archivo como namespace.
+
+2) Cómo es la cuestión de los namespace es por cada archivo?  oen varios archivos puedo usar el mismo?
+Los pregunto por que no se si sea necesario replicar el código si por ejemplo necesito el mimo spec en otro archivo.
+o como creo un archivo util de specs.
+
+3) Por Ejemplo con el EntityMap es posible atrapar el error del Explain y manjarlo para mostrar un mensaje más acorde??
+
+4) No entendí muy bien lo de  unqualified keys en entityMap.
+	R/ Entiendo que es solamente para cuando no se tiene un namespace.
+
+---********************************************
+
+
+
+
+
+
+http://blog.klipse.tech/clojure/2016/05/30/spec.html
+
+http://clojure.org/guides/spec
+
+---para usarlo vía REPL:
+(require '[clojure.spec :as s])
+
+--Para incluirlo como name space  //es decir EN LA CEBECERA DEL ARCHIVO .clj en el que se está realizando el ejemplo
+(ns my.ns
+  (:require [clojure.spec :as s]))
+  
+  
+ ..*************Predicates: Predicados:::::::::::::::::::::::::::::::::::
+ Se usa el conform o el validate que recibe un posible spec 
+ 
+ cuando se usa 
+ (s/conform even? 1000)--diría que el predicado es la pregunta de si es even? la respuesta de ese predicado es una conform.
+ 
+ --******REGISTRY****************************
+ > Es la manera de registrar los specs que se creen en un namespace, útil por ejemplo para reusabilidad de código 
+ 
+ 
+ 
+ --****************************************
+ Composing predicates:::::
+ 
+ -Se realiza usando AND u OR.
+ (s/def ::big-even (s/and int? even? #(> % 1000)))
+(s/valid? ::big-even :foo) ;; false
+(s/valid? ::big-even 10) ;; false
+(s/valid? ::big-even 100000) ;; true
+
+--
+
+(s/def ::name-or-id (s/or :name string?
+                          :id   int?))
+(s/valid? ::name-or-id "abc") ;; true
+(s/valid? ::name-or-id 100) ;; true
+(s/valid? ::name-or-id :foo) ;; false
+
+
+
+--****************************************
+Explain:::::::::
+Operacion de alto nivel que retorna una salida indicando el motivo por el cual un valor no es conforme a un spec 
+dicho output se ve en la consola.
+
+--****************************************
+Entity Maps::::::::::::::::
+Los programas en clojure utilizan frecuentemente el paso de Maps de datos, en donde se combina la clave y la estructura de sus valores, en lugar 
+de clave-valor (en donde el valor es el dato pelado NO LA ESTRUCTURA).
+
+Entity maps EN  spec  SE definen con keys 
+--*******************************************
+(def email-regex #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$")
+(s/def ::email-type (s/and string? #(re-matches email-regex %)))
+
+(s/def ::acctid int?)
+(s/def ::first-name string?)
+(s/def ::last-name string?)
+(s/def ::email ::email-type)
+
+(s/def ::person (s/keys :req [::first-name ::last-name ::email]
+                        :opt [::phone]))
+						
+
+El spec person es un enity map , lo que hace es validar cuales son los atributos requeridos y 
+luego que cada uno tenga un valor válido, de acuerdo a los especificado en cada def.
+
+						
+--*******************************************
+17 nov 2016
+
+meetup!!!:
+
+confor ya me devuelve la definición si es ok;, sí no cumple retorna el invalid.
+
+Explain:
+Sí se requiere un mejor manejo del error y muestra el motivo real.
+
+
+Unie qualified: 
+con dos puntos dos puntos :: (fullqualified)
+con dos puntos solos es unquialifies y el va a tratar de resolverlo
+
+
+el NAMESPACE se diefine por cada archivo y es la ruta del paquete y el archivo (así como java el nombre del paquete)
+
+
+
+
+def -record es crear mapas con NOMBRE
+
+KEYWORDS son las palabras con dos puntos antes.
+
+
+--*************
+s/* cero o muchas
+s/
+keys/* : Puedo tener cualquier cantidad de keys que cumplan la forma
+
+Se usó en la mayoróa cnform
+
+; Spec como tal viene incluido en 1.9 pero si se triene una menor entonces agregar la dependencia
+y colocarlo en el namespace.
+
+para validaciones : conform, validar
+
+Para debugear     ; describe
+
+s/describe 
+
+el % es sintactic sugar para decir por ejemplo x (eve? (count x)
+
+
+
+prog funcional se piensa mucho en que todo es una coleccion 
+
+a las funciones se le pueden coloca precondiciones y postcondicion (resultado)
+Una funcion que valide si es una persona correcta
+
+S/check-assert: 
+False:No haga raise de la excepción.
+True: 
+
+S/describe muestra como todo lo que hace por debajo :)
+
+
+puedo empezar a escribir una funcion 
+
+puedo tener los tipos aparte en otro archivo
+
+Pattern match en clojure es como 
+
+SI TIENE UN MACRO ERA COMPLICADO ANTES DE 1.9 EN DONDE LA GENTE SACABA LO IMPORTANTE DEL MACRO Y PRUEBELO POR QUE PARA TESTEARLO ES MUY MALUCO,
+
+AHORA EN 1.9 YA ES MÁS FÁCIL.
+
+tUPLA, Vector de dos elementos , en la tupla se puede decir qen que posicion que tipo es.
+
+Deal: LQuiere decir que la implementacion no importa.
+
+
+
+
+:::::::Generators:::
+
+(gen/genrate (s/gen ::player))
+...(puntos suspensivos quiere decir que puso muchos mas)
+
+Generate lo que hace es generar cosas del tipo de sec que creen
+ya con deal (buscar) ya se puede decir que condiciones debe cumplir.
+
+s/cat ?? (buscar)
+
+en list 
+cuando se usa '() quiere decir que adelante de ' van datos
+
+cuando es comilla diagonal quiere decir que no usa la función sino la instrumentacion ó especificación de la funcions
+
+
+ambas comillas son de clijure y no de clojure spec.
+
+VER EJEMPLO range-rand QUE SE MOSTRO EN EL MEETUP.
+
+
+Si le digo al genereate por ejemplo que es un string y que contenga la palabra hello ..el se explota 
+
+
+
+
+;; entonces custom generators (cód del meetup)
+por ejemplo generar emails 
+
+gen/fmap : gENERAR COSAS QUE TIENEN PATRONES (EMAILS ALGO CON HELLO)
+
+
+Validar que algo está en algún rango 
+;time
+
+Algo que sea mayor que x cosa
+
+ 
+ 
+;Instrumentacion 
+
+stest/instrumentation 
+
+
+stest/check
+
+uber-jar : para generar el jar y hacer el deploy 
+
+Ventaja de los lenguajes staticos de probar cuando se está compilando 
+
+Caso que se puede hacer 	ES QUE NO DEJA GENEAR EL .JAR sí no pasa los test en tiempo de compilacion
+En el meetup dijeron que es posible
+
+
+
+cUANDO USARLO:
+Crear un usuario y que retorne mensaje de éxito.
+
+Puede aplicar
+Formulario que no metan nulos 0000000000 
+COSAS IMPORTANTES DEL CORE 
+
+
+La invitación es a empezar a usarlo 
+
+A la parte que se le aplique ES MEJOR ASEGURARNOS QUE SEA FULL SIDE EFEFCT 
+
+
+
+Produccion	PDN	AUTOMATIZACIÓN	Consulta	N/A HORAN	SimonWeb		ops$cseguempr	HJKL4329	
+
+ProduccionPDN	AUTOMATIZACIÓNATIZACIÓN	ConsultaN/AHORAN	SimonWeb	ops$cseguemprHJKL4329	
+--**************************************** 
+ 

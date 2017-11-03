@@ -1,0 +1,135 @@
+
+
+http://articulo.tucarro.com.co/MCO-431607531-nissan-march-advance-motor-1600-7900-kilometros-_JM
+
+Do Things:
+
+str: Para concatenar, ejemplo:
+(str "It was the panda " "in the library " "with a dust buster")
+
+
+Control:
+
+if::::::::::::
+
+(if boolean
+	que pasa sí true
+	que pasa sí false)
+	
+	
+(if false
+  "By Odin's Elbow!")
+; => nil
+
+;varias operaciones para el true o el false
+(if true
+  (do (println "Success!")
+      "By Zeus's hammer!")
+  (do (println "Failure!")
+      "By Aquaman's trident!"))
+	
+(if "bears eat beets"
+  "bears beets Battlestar Galactica")
+; => "bears beets Battlestar Galactica"
+
+(if nil
+  "This won't be the result because nil is falsey"
+  "nil is falsey")
+; => "nil is falsey"
+
+
+--***********************************************
+Clojure’s equality operator is = :
+
+(= 1 1)
+; => true
+
+(= nil nil)
+; => true
+
+(= 1 2)
+; => false
+
+
+--***********************************************
+Maps: Clave-valor
+{:name {:first "John" :middle "Jacob" :last "Jingleheimerschmidt"}}
+
+
+--***********************************************
+Data Structures
+
+
+--Functions***********************************+
+Una operación en clojure tiene opening parenthesis, operator, operands, closing parenthesis.
+Function Arity: It depends on the parameters number , 0 is zero-arity , 1: One_atity ......
+
+para crear una funcion se usa defn!!!.
+
+
+Destructuring:::::::::::::::::::::::.
+
+
+--*******************************
+Quedo en Pulling It All Together:::::::::::::::::::::
+
+
+Function let::::
+let it be 
+
+usos:
+1) Lo que hace es ligar nombres a valores , es decir, permite nombramiento que ressulta útil para nosotros 
+2) Evalua una expresión solamente una vez y se puede reusar, importante en el momento en que tengamos funciones complejas 
+en donde evaluarla cada vez que se llame resulta pesado.
+
+
+--*******************************
+Regular Expressions
+
+re-find: Se usa para verificar un pattern matching.
+Ejemplo
+(re-find #"^left-" "left-eye")
+; => "left-"
+
+(re-find #"^left-" "cleft-chin")
+; => nil
+
+(re-find #"^left-" "wongleblart")
+; => nil
+
+--*******************************
+;Better Symmetrizer with reduce
+
+; el patron de recorrer una estructura y construir un resultado se abstrae con la función reduce de clojure.Ejemplo
+
+(reduce + [1 3 4 5])
+;13
+(reduce + 15 [1 3  4] )
+;23
+OJO AUNQUE EN ESTE EJERCICIO EL RESULTADO ES UN SOLO NÚMERO EN LA PRÁCTICA MUCHAS VECES HASTA DEVUELTE 
+COLLECCIONES MAS GRANDES QUE LA QUE SE LE ENTREGÓ AL REDUCE INICIALMENTE.
+
+
+
+--*******************************
+Quedo en 
+Hobbit Violence
+
+
+
+--***********************************
+páginas para hacer ejercicios
+1) Documentación.
+2) http://www.projecteuler.net/   Ejercicios 
+3) http://www.4clojure.com/problems/) Ejercicios
+
+PRIMERO TRATAR DE HACER LOS DEL CAPÍTULO - los 3 primeros y luego los demás si soy capaz, no es obligación 
+--***********************************
+Exercises:
+2)
+Write a function that takes a number and adds 100 to it.
+Solution:
+
+
+
+
