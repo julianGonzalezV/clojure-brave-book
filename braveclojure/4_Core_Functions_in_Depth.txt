@@ -12,7 +12,7 @@ La función  map en Clojure  aplica para:
 >hash map 
 (Ver código clojure )
 
-Miesntas que es posible que en otros lenguajes (Elisp por ejemplo) Existe:
+Mientras que es posible que en otros lenguajes (Elisp por ejemplo) Existe:
 >función map para listas, 
 >función maphash  para estructura de datos hash map 
 Lo anterior se llama definir funciones en terminos de estructura 
@@ -92,7 +92,7 @@ Ver ejemplo en el código:
 
 
 filter and some:::
-En el ejemplo de take-while lo que hacíamos era elimianar y take para obtener los registros de febrero
+En el ejemplo de take-while lo que hacíamos era eliminar y take para obtener los registros de febrero
 por lo cual filter hace esto de una vez :) 
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
